@@ -83,6 +83,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#linear-regression-model-using-r" id="toc-linear-regression-model-using-r" class="nav-link" data-scroll-target="#linear-regression-model-using-r"><span class="header-section-number">2</span> Linear Regression model using <strong>R</strong></a></li>
+  <li><a href="#linear-regression-model-using-python" id="toc-linear-regression-model-using-python" class="nav-link" data-scroll-target="#linear-regression-model-using-python"><span class="header-section-number">3</span> Linear Regression model using <strong>Python</strong></a></li>
   </ul>
 </nav>
 </div>
@@ -140,7 +142,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Load Data</p>
+<p>Load the Data</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -179,89 +181,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  Max.   :34.90   Max.   :21.40  </code></pre>
 </div>
 </div>
-<p>Run linear model using R</p>
+</section>
+<section id="linear-regression-model-using-r" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Linear Regression model using <strong>R</strong></h1>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lm </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lm_r <span class="ot">&lt;-</span> <span class="fu">lm</span>(Height <span class="sc">~</span> Age <span class="sc">+</span> Wrist <span class="sc">+</span> Knee <span class="sc">+</span> Ankle, <span class="at">data =</span> df)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>function (formula, data, subset, weights, na.action, method = "qr", 
-    model = TRUE, x = FALSE, y = FALSE, qr = TRUE, singular.ok = TRUE, 
-    contrasts = NULL, offset, ...) 
-{
-    ret.x &lt;- x
-    ret.y &lt;- y
-    cl &lt;- match.call()
-    mf &lt;- match.call(expand.dots = FALSE)
-    m &lt;- match(c("formula", "data", "subset", "weights", "na.action", 
-        "offset"), names(mf), 0L)
-    mf &lt;- mf[c(1L, m)]
-    mf$drop.unused.levels &lt;- TRUE
-    mf[[1L]] &lt;- quote(stats::model.frame)
-    mf &lt;- eval(mf, parent.frame())
-    if (method == "model.frame") 
-        return(mf)
-    else if (method != "qr") 
-        warning(gettextf("method = '%s' is not supported. Using 'qr'", 
-            method), domain = NA)
-    mt &lt;- attr(mf, "terms")
-    y &lt;- model.response(mf, "numeric")
-    w &lt;- as.vector(model.weights(mf))
-    if (!is.null(w) &amp;&amp; !is.numeric(w)) 
-        stop("'weights' must be a numeric vector")
-    offset &lt;- model.offset(mf)
-    mlm &lt;- is.matrix(y)
-    ny &lt;- if (mlm) 
-        nrow(y)
-    else length(y)
-    if (!is.null(offset)) {
-        if (!mlm) 
-            offset &lt;- as.vector(offset)
-        if (NROW(offset) != ny) 
-            stop(gettextf("number of offsets is %d, should equal %d (number of observations)", 
-                NROW(offset), ny), domain = NA)
-    }
-    if (is.empty.model(mt)) {
-        x &lt;- NULL
-        z &lt;- list(coefficients = if (mlm) matrix(NA_real_, 0, 
-            ncol(y)) else numeric(), residuals = y, fitted.values = 0 * 
-            y, weights = w, rank = 0L, df.residual = if (!is.null(w)) sum(w != 
-            0) else ny)
-        if (!is.null(offset)) {
-            z$fitted.values &lt;- offset
-            z$residuals &lt;- y - offset
-        }
-    }
-    else {
-        x &lt;- model.matrix(mt, mf, contrasts)
-        z &lt;- if (is.null(w)) 
-            lm.fit(x, y, offset = offset, singular.ok = singular.ok, 
-                ...)
-        else lm.wfit(x, y, w, offset = offset, singular.ok = singular.ok, 
-            ...)
-    }
-    class(z) &lt;- c(if (mlm) "mlm", "lm")
-    z$na.action &lt;- attr(mf, "na.action")
-    z$offset &lt;- offset
-    z$contrasts &lt;- attr(x, "contrasts")
-    z$xlevels &lt;- .getXlevels(mt, mf)
-    z$call &lt;- cl
-    z$terms &lt;- mt
-    if (model) 
-        z$model &lt;- mf
-    if (ret.x) 
-        z$x &lt;- x
-    if (ret.y) 
-        z$y &lt;- y
-    if (!qr) 
-        z$qr &lt;- NULL
-    z
-}
-&lt;bytecode: 0x000001b52429baf8&gt;
-&lt;environment: namespace:stats&gt;</code></pre>
+<pre><code>
+Call:
+lm(formula = Height ~ Age + Wrist + Knee + Ankle, data = df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-40.105  -1.426   0.228   1.593   5.844 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 45.65490    4.26258  10.711  &lt; 2e-16 ***
+Age         -0.06938    0.01804  -3.846 0.000153 ***
+Wrist        1.24533    0.33478   3.720 0.000247 ***
+Knee         0.10347    0.12800   0.808 0.419636    
+Ankle        0.03951    0.16952   0.233 0.815913    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.369 on 247 degrees of freedom
+Multiple R-squared:  0.1675,    Adjusted R-squared:  0.154 
+F-statistic: 12.43 on 4 and 247 DF,  p-value: 3.177e-09</code></pre>
 </div>
 </div>
+</section>
+<section id="linear-regression-model-using-python" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Linear Regression model using <strong>Python</strong></h1>
 </section>
 
 </main>
