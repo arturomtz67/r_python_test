@@ -42,7 +42,7 @@ pacman::p_load(
   readr,
   here, # relative file pathways 
   tidyverse # data management and visualization
-  )
+ )
 
 
 ```
