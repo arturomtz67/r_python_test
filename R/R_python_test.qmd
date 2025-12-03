@@ -62,3 +62,19 @@ summary(lm_r)
 ```
 
 # Linear Regression model using **Python**
+```{python}
+
+import statsmodels.api as sm
+
+# R data frame -> pandas DataFrame
+df_py = r.df
+
+# choose predictors + outcome 
+X = df_py[["Age", "Wrist", "Knee","Ankle"]]   
+X = sm.add_constant(X)  # adds intercept
+y = df_py["Height"]
+
+lm_py = sm.OLS(y, X).fit()
+print(lm.py.summary())
+```
+
