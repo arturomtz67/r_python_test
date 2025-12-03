@@ -5,10 +5,10 @@
 
 
 # Ignore all rendered HTML files
-*.html
+.html
 
 # Ignore all Quarto execution folders
-*_files/
+_files/
 
 # Ignore all libraries inside those folders
-*_files/**/libs/
+_files/**/libs/
