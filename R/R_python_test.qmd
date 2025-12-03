@@ -21,12 +21,12 @@ editor: visual
 
 # Introduction
 
-This document is a test/exercise to run <b>R</b> and <b>Python </b> code in the <b>same</b> Quarto file. 
+This document is a test/exercise to run <b>R</b> and <b>Python </b> code in the <b>same</b> Quarto file.
 
 I will perform linear regressions using data from [Body Fat Data](https://hbiostat.org/data/) that is found in the book [Regression Modeling Strategies](https://hbiostat.org/rmsc/) by [Frank E Harrell Jr](https://hbiostat.org/)
 
-
 Install and load packages
+
 ```{r}
 # Install and load packages
 
@@ -47,34 +47,37 @@ pacman::p_load(
 
 ```
 
-
 Load the Data
+
 ```{r}
 # Load data 
 df <- read_csv(here("Input", "Data", "bodyfat.csv"))
 summary(df)
 ```
 
-# Linear Regression model using **R**
+# **R** Linear Regression
+
 ```{r}
 lm_r <- lm(Height ~ Age + Wrist + Knee + Ankle, data = df)
 summary(lm_r)
 ```
 
-# Linear Regression model using **Python**
+# **Python** Linear Regression
+
 ```{python}
 
+import pandas as pd
 import statsmodels.api as sm
 
-# R data frame -> pandas DataFrame
-df_py = r.df
+# Convert the R dataframe to a pandas DataFrame
+df_py = pd.DataFrame(r.df)
 
 # choose predictors + outcome 
-X = df_py[["Age", "Wrist", "Knee","Ankle"]]   
+X = df_py[["Age", "Wrist", "Knee","Ankle"]]
+type(df_py)
 X = sm.add_constant(X)  # adds intercept
 y = df_py["Height"]
 
 lm_py = sm.OLS(y, X).fit()
-print(lm.py.summary())
+print(lm_py.summary())
 ```
-
